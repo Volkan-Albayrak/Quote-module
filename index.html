@@ -207,12 +207,11 @@
     text-align: center;
   }
   table.teklif td.fiyat { text-align: right; white-space: nowrap; font-weight: bold; }
-  table.teklif tr.toplam th { text-align: left; }
   table.teklif tr.toplam td {
-    background: var(--sari);
-    color: var(--sari-yazi);
+    background: #fff;
+    color: #000;
     font-weight: bold;
-    text-align: right;
+    text-align: center;
   }
   #kopyalama-alani { position: absolute; left: -9999px; top: -9999px; }
 
@@ -492,10 +491,9 @@ function kopyaTabloYap() {
   const toplamEtiket = indirim > 0 ? "Proje İndirimli Toplam Fiyat" : "Kdv Hariç Toplam Proje Fiyatı";
 
   const satirlar = secilenler.map(s => {
-    const ad = s.ad + (s.adet > 1 ? " / " + s.adet + " numune" : "");
     return `
         <tr>
-          <td>${ad}</td>
+          <td>${s.ad}</td>
           <td class="fiyat">${fiyatGoster(s.eur * s.adet)}</td>
           <td>${metot}</td>
           <td>${numune}</td>
@@ -517,8 +515,7 @@ function kopyaTabloYap() {
       <tbody>
         ${satirlar}
         <tr class="toplam">
-          <th>${toplamEtiket}</th>
-          <td colspan="4">${fiyatGoster(sonFiyat)} + Kdv</td>
+          <td colspan="5" style="text-align:center;">${toplamEtiket}: ${fiyatGoster(sonFiyat)} + Kdv</td>
         </tr>
       </tbody>
     </table>
@@ -545,7 +542,7 @@ function wordeKopyala() {
   klon.querySelectorAll("td").forEach(td => {
     const ust = td.closest("tr").classList.contains("toplam");
     let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:top;" + yaziStil;
-    if (ust) stil += "background:#FFC000;color:#412402;text-align:right;";
+    if (ust) stil += "background:#ffffff;color:#000000;text-align:center;";
     else if (td.classList.contains("fiyat")) stil += "text-align:right;white-space:nowrap;";
     td.setAttribute("style", stil);
   });
