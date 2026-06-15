@@ -529,20 +529,21 @@ function wordeKopyala() {
     return;
   }
 
-  // Word'e biçimle yapışması için inline stilli kopya oluştur
+  // Word'e biçimle yapışması için inline stilli kopya oluştur (Calibri, 9pt, bold)
+  const yaziStil = "font-family:Calibri,sans-serif;font-size:9pt;font-weight:bold;";
   const klon = tablo.cloneNode(true);
   klon.querySelectorAll("th").forEach(th => {
     const ust = th.closest("tr").classList.contains("toplam");
-    th.setAttribute("style", "border:1px solid #BA7517;padding:8px 10px;background:#FFC000;color:#412402;font-weight:bold;text-align:" + (ust ? "left" : "center") + ";font-family:Arial,sans-serif;font-size:13px;");
+    th.setAttribute("style", "border:1px solid #BA7517;padding:8px 10px;background:#FFC000;color:#412402;text-align:" + (ust ? "left" : "center") + ";" + yaziStil);
   });
   klon.querySelectorAll("td").forEach(td => {
     const ust = td.closest("tr").classList.contains("toplam");
-    let stil = "border:1px solid #BA7517;padding:8px 10px;font-family:Arial,sans-serif;font-size:13px;vertical-align:top;";
-    if (ust) stil += "background:#FFC000;color:#412402;font-weight:bold;text-align:right;";
-    else if (td.classList.contains("fiyat")) stil += "text-align:right;font-weight:bold;white-space:nowrap;";
+    let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:top;" + yaziStil;
+    if (ust) stil += "background:#FFC000;color:#412402;text-align:right;";
+    else if (td.classList.contains("fiyat")) stil += "text-align:right;white-space:nowrap;";
     td.setAttribute("style", stil);
   });
-  klon.setAttribute("style", "border-collapse:collapse;font-family:Arial,sans-serif;");
+  klon.setAttribute("style", "border-collapse:collapse;" + yaziStil);
 
   const html = klon.outerHTML;
   const blob = new Blob([html], { type: "text/html" });
