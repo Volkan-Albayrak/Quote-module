@@ -284,24 +284,25 @@
 <div id="kopyalama-alani"></div>
 
 <script>
-// Gömülü birim fiyatlar (OYDER Oyuncak listesi, kur 51, TL) — Kaynak: Fiyatlama Excel'i, "Oyuncak-oyder"
+// Gömülü birim fiyatlar EUR bazlıdır. TL tutarı = EUR × güncel kur olarak hesaplanır.
+// Kaynak: Fiyatlama Excel'i, "Oyuncak-oyder"
 const ANALIZLER = [
-  { ad: "EN 71-1 Fiziksel ve Mekanik", fiyat: 2142 },
-  { ad: "EN 71-1 Yıkamalı",            fiyat: 4947 },
-  { ad: "EN 71-2 Yanmazlık",           fiyat: 612 },
-  { ad: "EN 71-2 Yıkamalı",            fiyat: 1224 },
-  { ad: "EN 71-3 Ağır Metal",          fiyat: 2244 },
-  { ad: "PAH",                         fiyat: 2244 },
-  { ad: "Fitalat",                     fiyat: 1224 },
-  { ad: "Azo",                         fiyat: 867 },
-  { ad: "BPA",                         fiyat: 1887 },
-  { ad: "Alev Geciktiriciler",         fiyat: 1887 },
-  { ad: "Nitrosamin",                  fiyat: 3162 },
-  { ad: "Formamide",                   fiyat: 3417 },
-  { ad: "Benzen",                      fiyat: 3672 },
-  { ad: "Fenol",                       fiyat: 1887 },
-  { ad: "Formaldehit",                 fiyat: 1887 },
-  { ad: "Preservatives",               fiyat: 2754 }
+  { ad: "EN 71-1 Fiziksel ve Mekanik", eur: 42 },
+  { ad: "EN 71-1 Yıkamalı",            eur: 97 },
+  { ad: "EN 71-2 Yanmazlık",           eur: 12 },
+  { ad: "EN 71-2 Yıkamalı",            eur: 24 },
+  { ad: "EN 71-3 Ağır Metal",          eur: 44 },
+  { ad: "PAH",                         eur: 44 },
+  { ad: "Fitalat",                     eur: 24 },
+  { ad: "Azo",                         eur: 17 },
+  { ad: "BPA",                         eur: 37 },
+  { ad: "Alev Geciktiriciler",         eur: 37 },
+  { ad: "Nitrosamin",                  eur: 62 },
+  { ad: "Formamide",                   eur: 67 },
+  { ad: "Benzen",                      eur: 72 },
+  { ad: "Fenol",                       eur: 37 },
+  { ad: "Formaldehit",                 eur: 37 },
+  { ad: "Preservatives",               eur: 54 }
 ];
 
 let dovizBirimi = "TL";
@@ -315,12 +316,12 @@ function kurDegeri() {
   return parseFloat(document.getElementById("kur").value) || 1;
 }
 
-// TL tutarı seçili para birimine çevirip etiketli string döndürür
-function fiyatGoster(tlTutar) {
+// EUR taban tutarını seçili para birimine çevirip etiketli string döndürür
+function fiyatGoster(eurTutar) {
   if (dovizBirimi === "EUR") {
-    return trSayi(tlTutar / kurDegeri()) + " EUR";
+    return trSayi(eurTutar) + " EUR";
   }
-  return trSayi(tlTutar) + " TL";
+  return trSayi(eurTutar * kurDegeri()) + " TL";
 }
 
 function dovizSec(birim) {
@@ -401,11 +402,11 @@ function hesapla() {
     const fiyatHucre = document.getElementById("fiyat-" + i);
 
     satir.classList.toggle("secili", sec);
-    fiyatHucre.textContent = fiyatGoster(a.fiyat);
+    fiyatHucre.textContent = fiyatGoster(a.eur);
 
     if (sec && adet > 0) {
-      toplam += a.fiyat * adet;
-      secilenler.push({ ad: a.ad, adet: adet, fiyat: a.fiyat });
+      toplam += a.eur * adet;
+      secilenler.push({ ad: a.ad, adet: adet, eur: a.eur });
     }
   });
 
