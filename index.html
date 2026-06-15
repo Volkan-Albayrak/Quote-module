@@ -9,86 +9,179 @@
     --sari: #FFC000;
     --sari-kenar: #BA7517;
     --sari-yazi: #412402;
+    --koyu: #1d1d1d;
+    --koyu2: #2b2b2b;
   }
   * { box-sizing: border-box; }
   body {
     font-family: "Segoe UI", Arial, sans-serif;
     margin: 0;
-    padding: 24px;
     background: #f4f4f4;
     color: #222;
   }
-  .kapsayici { max-width: 1000px; margin: 0 auto; }
-  h1 { font-size: 20px; margin: 0 0 4px; }
-  .altbaslik { color: #666; font-size: 13px; margin: 0 0 20px; }
-  .kart {
+
+  /* Üst bar */
+  .ust-bar {
+    background: var(--koyu);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 24px;
+  }
+  .ust-sol { display: flex; align-items: center; gap: 14px; }
+  .logo { font-size: 20px; font-weight: 700; font-style: italic; letter-spacing: 0.5px; }
+  .ayrac { color: #666; font-size: 18px; }
+  .baslik { font-size: 16px; font-weight: 600; }
+  .ust-sag { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .ust-sag label { font-size: 13px; color: #ccc; }
+
+  .doviz-toggle {
+    display: flex;
+    background: var(--sari);
+    border-radius: 6px;
+    padding: 3px;
+    gap: 3px;
+  }
+  .doviz-toggle button {
+    border: none;
+    background: transparent;
+    color: var(--sari-yazi);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 6px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .doviz-toggle button.aktif {
+    background: var(--koyu);
+    color: #fff;
+  }
+
+  .btn-tcmb {
+    background: var(--sari);
+    color: var(--sari-yazi);
+    border: none;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 9px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn-tcmb:hover { background: #e6ad00; }
+
+  #kur {
+    width: 70px;
+    padding: 8px 9px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    text-align: center;
+  }
+  .kur-aciklama { font-size: 11px; color: #999; max-width: 160px; line-height: 1.3; }
+
+  /* Ana içerik */
+  .ana-icerik {
+    display: flex;
+    gap: 18px;
+    padding: 18px 24px;
+    align-items: flex-start;
+  }
+  .panel {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 18px;
-    margin-bottom: 18px;
+    overflow: hidden;
   }
-  .kart h2 { font-size: 15px; margin: 0 0 12px; color: #333; }
+  .panel-baslik {
+    background: var(--koyu2);
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 12px 18px;
+    text-transform: uppercase;
+  }
+  .panel-govde { padding: 16px 18px; }
 
-  /* Üst ayarlar */
-  .ayarlar { display: flex; flex-wrap: wrap; gap: 18px; align-items: flex-end; }
-  .alan { display: flex; flex-direction: column; gap: 4px; }
-  .alan label { font-size: 12px; color: #555; font-weight: 600; }
-  .alan input {
-    padding: 7px 9px;
+  .panel-analiz { flex: 2 1 0; min-width: 0; }
+  .panel-teklif { flex: 1 1 0; min-width: 280px; }
+
+  /* Analiz listesi - 2 sütun */
+  .analiz-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 28px;
+  }
+  .analiz-satir {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .analiz-satir input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+  .analiz-ad { flex: 1 1 auto; font-size: 14px; }
+  .analiz-fiyat { font-size: 13px; color: #999; min-width: 80px; text-align: right; }
+  .analiz-satir.secili .analiz-fiyat { color: #333; font-weight: 600; }
+  .analiz-adet {
+    width: 52px;
+    padding: 6px 7px;
     border: 1px solid #ccc;
     border-radius: 5px;
-    font-size: 14px;
-    width: 130px;
-  }
-
-  /* Analiz listesi */
-  table.liste { width: 100%; border-collapse: collapse; }
-  table.liste th, table.liste td {
-    padding: 7px 9px;
-    border-bottom: 1px solid #eee;
-    text-align: left;
+    text-align: center;
     font-size: 13px;
   }
-  table.liste th { background: #fafafa; font-weight: 600; color: #555; }
-  table.liste td.sag, table.liste th.sag { text-align: right; }
-  table.liste input[type="number"] {
-    width: 70px;
-    padding: 5px 6px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    text-align: right;
-    font-size: 13px;
-  }
-  table.liste input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
-  .satir-pasif { color: #aaa; }
 
-  /* Düzenlenebilir alanlar */
-  .duz-alan { display: flex; flex-direction: column; gap: 4px; }
+  /* Teklif tablosu paneli */
+  .teklif-butonlar { display: flex; gap: 10px; margin-bottom: 14px; }
+  button.btn-ana {
+    background: var(--sari); color: var(--sari-yazi); border: none;
+    padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  button.btn-ana:hover { background: #e6ad00; }
+  button.btn-ikincil {
+    background: var(--koyu2); color: #fff; border: none;
+    padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer;
+  }
+  button.btn-ikincil:hover { background: #444; }
+  .uyari { display: block; margin-top: 8px; font-size: 13px; color: #2e7d32; }
+
+  .bos-uyari { color: #999; font-size: 13px; }
+  .bos-uyari p { margin: 0 0 10px; }
+
+  .teklif-ozet { font-size: 13px; }
+  .teklif-ozet .analiz-liste { margin: 0 0 14px; padding: 0 0 0 18px; }
+  .teklif-ozet .analiz-liste li { padding: 2px 0; }
+  .duz-alan { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
   .duz-alan label { font-size: 12px; color: #555; font-weight: 600; }
   .duz-alan input {
     padding: 7px 9px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;
   }
-  .duz-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
-
-  /* Butonlar */
-  .butonlar { display: flex; gap: 10px; flex-wrap: wrap; }
-  button {
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
+  .teklif-fiyat {
+    background: var(--sari); color: var(--sari-yazi); font-weight: 700;
+    border-radius: 6px; padding: 10px 12px; text-align: right; font-size: 14px; margin-top: 10px;
   }
-  .btn-ana { background: var(--sari); color: var(--sari-yazi); border: 1px solid var(--sari-kenar); }
-  .btn-ana:hover { background: #e6ad00; }
-  .btn-ikincil { background: #eee; color: #444; }
-  .btn-ikincil:hover { background: #ddd; }
-  .uyari { color: #2e7d32; font-size: 13px; margin-left: 8px; align-self: center; }
 
-  /* Teklif tablosu (müşteri standardı) */
-  .onizleme-kapsayici { overflow-x: auto; }
+  /* Fiyatlandırma */
+  .panel-fiyat { margin: 0 24px 24px; }
+  .fiyat-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+  }
+  .fiyat-alan { display: flex; flex-direction: column; gap: 6px; }
+  .fiyat-alan label { font-size: 12px; color: #555; font-weight: 600; }
+  .fiyat-alan input {
+    padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;
+  }
+  .fiyat-alan input[readonly] { background: #f9f9f9; color: #333; font-weight: 600; }
+  #indirimliFiyat { border: 1px solid var(--sari-kenar); background: #fff8e6; }
+
+  /* Yazdırılabilir/kopyalanabilir teklif tablosu (panodaki Word çıktısı) */
   table.teklif { border-collapse: collapse; width: 100%; font-family: "Segoe UI", Arial, sans-serif; }
   table.teklif th, table.teklif td {
     border: 1px solid var(--sari-kenar);
@@ -103,90 +196,92 @@
     text-align: center;
   }
   table.teklif td.fiyat { text-align: right; white-space: nowrap; font-weight: bold; }
-  table.teklif tr.toplam th {
-    text-align: left;
-  }
+  table.teklif tr.toplam th { text-align: left; }
   table.teklif tr.toplam td {
     background: var(--sari);
     color: var(--sari-yazi);
     font-weight: bold;
     text-align: right;
   }
-  .analiz-liste { margin: 0; padding: 0; list-style: none; }
-  .analiz-liste li { padding: 1px 0; }
-  .bos-uyari { color: #999; font-size: 13px; padding: 12px 0; }
+  #kopyalama-alani { position: absolute; left: -9999px; top: -9999px; }
+
+  @media (max-width: 900px) {
+    .ana-icerik { flex-direction: column; }
+    .analiz-grid { grid-template-columns: 1fr; }
+    .fiyat-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
-<div class="kapsayici">
-  <h1>OYDER Oyuncak Teklif Aracı</h1>
-  <p class="altbaslik">Analizleri seçin, adet girin; teklif tablosu otomatik oluşur. "Word'e Yapıştır" ile panoya kopyalayıp Word'e Ctrl+V yapın.</p>
 
-  <!-- Üst ayarlar -->
-  <div class="kart">
-    <div class="ayarlar">
-      <div class="alan">
-        <label for="indirim">İndirim Oranı (%)</label>
-        <input type="number" id="indirim" min="0" max="100" step="1" value="0" oninput="hesapla()">
-      </div>
-      <div class="alan">
-        <label for="kdv">KDV Oranı (%)</label>
-        <input type="number" id="kdv" min="0" max="100" step="1" value="20" oninput="hesapla()">
-      </div>
+<!-- Üst bar -->
+<div class="ust-bar">
+  <div class="ust-sol">
+    <span class="logo">intertek<span style="color:var(--sari);">.</span></span>
+    <span class="ayrac">|</span>
+    <span class="baslik">OYDER Oyuncak Teklif Aracı</span>
+  </div>
+  <div class="ust-sag">
+    <label>Para Birimi:</label>
+    <div class="doviz-toggle">
+      <button id="btn-tl" class="aktif" onclick="dovizSec('TL')">TL</button>
+      <button id="btn-eur" onclick="dovizSec('EUR')">EUR</button>
+    </div>
+    <button class="btn-tcmb" onclick="tcmbKurGetir()">TCMB Euro Satış</button>
+    <input type="number" id="kur" min="0" step="0.01" value="51" oninput="hesapla()">
+    <span class="kur-aciklama" id="kur-aciklama">Kur (€→TL) · TCMB satış, 0,5 yukarı</span>
+  </div>
+</div>
+
+<!-- Ana içerik -->
+<div class="ana-icerik">
+
+  <!-- Analiz seçimi -->
+  <div class="panel panel-analiz">
+    <div class="panel-baslik">Analiz Seçimi</div>
+    <div class="panel-govde">
+      <div class="analiz-grid" id="analiz-grid"></div>
     </div>
   </div>
 
-  <!-- Analiz listesi -->
-  <div class="kart">
-    <h2>Analizler</h2>
-    <table class="liste">
-      <thead>
-        <tr>
-          <th style="width:40px;">Seç</th>
-          <th>Analiz Adı</th>
-          <th class="sag" style="width:120px;">Birim Fiyat (TL)</th>
-          <th class="sag" style="width:90px;">Adet</th>
-          <th class="sag" style="width:130px;">Satır Toplam (TL)</th>
-        </tr>
-      </thead>
-      <tbody id="analiz-govde"></tbody>
-    </table>
-  </div>
-
-  <!-- Düzenlenebilir tablo alanları -->
-  <div class="kart">
-    <h2>Tablo Alanları (düzenlenebilir)</h2>
-    <div class="duz-grid">
-      <div class="duz-alan">
-        <label for="metot">Metot</label>
-        <input type="text" id="metot" value="EU Toys" oninput="hesapla()">
+  <!-- Teklif tablosu -->
+  <div class="panel panel-teklif">
+    <div class="panel-baslik">Teklif Tablosu</div>
+    <div class="panel-govde">
+      <div class="teklif-butonlar">
+        <button class="btn-ana" onclick="wordeKopyala()">Word'e Yapıştır</button>
+        <button class="btn-ikincil" onclick="temizle()">Sıfırla</button>
       </div>
-      <div class="duz-alan">
-        <label for="numune">Numune Miktarı</label>
-        <input type="text" id="numune" value="" oninput="hesapla()">
-      </div>
-      <div class="duz-alan">
-        <label for="servis">Servis Süresi</label>
-        <input type="text" id="servis" value="5 iş günü" oninput="hesapla()">
-      </div>
-    </div>
-  </div>
-
-  <!-- Butonlar -->
-  <div class="kart">
-    <div class="butonlar">
-      <button class="btn-ana" onclick="wordeKopyala()">Word'e Yapıştır (Kopyala)</button>
-      <button class="btn-ikincil" onclick="temizle()">Temizle</button>
+      <div id="teklif-icerik"></div>
       <span class="uyari" id="uyari"></span>
     </div>
   </div>
 
-  <!-- Teklif önizleme -->
-  <div class="kart">
-    <h2>Teklif Tablosu Önizleme</h2>
-    <div class="onizleme-kapsayici" id="onizleme"></div>
+</div>
+
+<!-- Fiyatlandırma -->
+<div class="panel panel-fiyat">
+  <div class="panel-baslik">Fiyatlandırma</div>
+  <div class="panel-govde">
+    <div class="fiyat-grid">
+      <div class="fiyat-alan">
+        <label for="genelToplam">Genel Toplam</label>
+        <input type="text" id="genelToplam" readonly>
+      </div>
+      <div class="fiyat-alan">
+        <label for="indirim">İndirim (%)</label>
+        <input type="number" id="indirim" min="0" max="100" step="1" value="0" oninput="hesapla()">
+      </div>
+      <div class="fiyat-alan">
+        <label for="indirimliFiyat">İndirimli Proje Fiyatı</label>
+        <input type="text" id="indirimliFiyat" readonly>
+      </div>
+    </div>
   </div>
 </div>
+
+<!-- Word'e kopyalama için gizli tam tablo -->
+<div id="kopyalama-alani"></div>
 
 <script>
 // Gömülü birim fiyatlar (OYDER Oyuncak listesi, kur 51, TL) — Kaynak: Fiyatlama Excel'i, "Oyuncak-oyder"
@@ -209,34 +304,76 @@ const ANALIZLER = [
   { ad: "Preservatives",               fiyat: 2754 }
 ];
 
+let dovizBirimi = "TL";
+
 // Türkçe sayı biçimi (binlik nokta, yuvarlanmış)
 function trSayi(n) {
   return Math.round(n).toLocaleString("tr-TR");
 }
 
+function kurDegeri() {
+  return parseFloat(document.getElementById("kur").value) || 1;
+}
+
+// TL tutarı seçili para birimine çevirip etiketli string döndürür
+function fiyatGoster(tlTutar) {
+  if (dovizBirimi === "EUR") {
+    return trSayi(tlTutar / kurDegeri()) + " EUR";
+  }
+  return trSayi(tlTutar) + " TL";
+}
+
+function dovizSec(birim) {
+  dovizBirimi = birim;
+  document.getElementById("btn-tl").classList.toggle("aktif", birim === "TL");
+  document.getElementById("btn-eur").classList.toggle("aktif", birim === "EUR");
+  hesapla();
+}
+
+// TCMB'den (banknot satış, 0,5 yukarı yuvarlanmış) Euro kurunu almaya çalışır
+function tcmbKurGetir() {
+  const uyari = document.getElementById("uyari");
+  fetch("https://www.tcmb.gov.tr/kurlar/today.xml")
+    .then(r => r.text())
+    .then(metin => {
+      const xml = new DOMParser().parseFromString(metin, "text/xml");
+      const eur = xml.querySelector('Currency[CurrencyCode="EUR"] BanknoteSelling');
+      if (!eur) throw new Error("Kur bulunamadı");
+      const satis = parseFloat(eur.textContent.replace(",", "."));
+      const yuvarlanmis = Math.ceil(satis * 2) / 2; // 0,5'in üstüne yuvarla
+      document.getElementById("kur").value = yuvarlanmis;
+      hesapla();
+      uyari.textContent = "TCMB kuru güncellendi: " + yuvarlanmis;
+      uyari.style.color = "#2e7d32";
+      setTimeout(() => { uyari.textContent = ""; }, 3000);
+    })
+    .catch(() => {
+      uyari.textContent = "TCMB kuru otomatik alınamadı, lütfen manuel girin.";
+      uyari.style.color = "#c62828";
+      setTimeout(() => { uyari.textContent = ""; }, 3500);
+    });
+}
+
 // Analiz listesini oluştur
 function listeyiOlustur() {
-  const govde = document.getElementById("analiz-govde");
-  govde.innerHTML = "";
+  const grid = document.getElementById("analiz-grid");
+  grid.innerHTML = "";
   ANALIZLER.forEach((a, i) => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td style="text-align:center;"><input type="checkbox" id="sec-${i}" onchange="hesapla()"></td>
-      <td>${a.ad}</td>
-      <td class="sag">${trSayi(a.fiyat)}</td>
-      <td class="sag"><input type="number" id="adet-${i}" min="0" step="1" value="1" oninput="hesapla()"></td>
-      <td class="sag" id="satir-${i}">0</td>
+    const satir = document.createElement("div");
+    satir.className = "analiz-satir";
+    satir.id = "satir-" + i;
+    satir.innerHTML = `
+      <input type="checkbox" id="sec-${i}" onchange="hesapla()">
+      <span class="analiz-ad">${a.ad}</span>
+      <span class="analiz-fiyat" id="fiyat-${i}"></span>
+      <input type="number" class="analiz-adet" id="adet-${i}" min="0" step="1" value="1" oninput="hesapla()">
     `;
-    govde.appendChild(tr);
+    grid.appendChild(satir);
   });
 }
 
 function hesapla() {
   const indirim = parseFloat(document.getElementById("indirim").value) || 0;
-  const kdv = parseFloat(document.getElementById("kdv").value) || 0;
-  const metot = document.getElementById("metot").value.trim();
-  const numune = document.getElementById("numune").value.trim();
-  const servis = document.getElementById("servis").value.trim();
 
   let secilenler = [];
   let toplam = 0;
@@ -244,43 +381,87 @@ function hesapla() {
   ANALIZLER.forEach((a, i) => {
     const sec = document.getElementById("sec-" + i).checked;
     const adet = parseInt(document.getElementById("adet-" + i).value) || 0;
-    const satirTr = document.getElementById("analiz-govde").rows[i];
-    const satirHucre = document.getElementById("satir-" + i);
+    const satir = document.getElementById("satir-" + i);
+    const fiyatHucre = document.getElementById("fiyat-" + i);
+
+    satir.classList.toggle("secili", sec);
+    fiyatHucre.textContent = fiyatGoster(a.fiyat);
 
     if (sec && adet > 0) {
-      const satirToplam = a.fiyat * adet;
-      satirHucre.textContent = trSayi(satirToplam);
-      satirTr.classList.remove("satir-pasif");
-      toplam += satirToplam;
-      secilenler.push({ ad: a.ad, adet: adet });
-    } else {
-      satirHucre.textContent = "0";
-      satirTr.classList.toggle("satir-pasif", !sec);
+      toplam += a.fiyat * adet;
+      secilenler.push({ ad: a.ad, adet: adet, fiyat: a.fiyat });
     }
   });
 
-  // İndirim
   const indirimliToplam = toplam * (1 - indirim / 100);
-  const sonFiyat = indirimliToplam;
 
-  // Önizleme tablosu
-  cizTeklif(secilenler, sonFiyat, indirim, kdv, metot, numune, servis);
+  document.getElementById("genelToplam").value = fiyatGoster(toplam);
+  document.getElementById("indirimliFiyat").value = fiyatGoster(indirimliToplam);
+
+  cizTeklif(secilenler, indirimliToplam, indirim);
 }
 
-function cizTeklif(secilenler, sonFiyat, indirim, kdv, metot, numune, servis) {
-  const onizleme = document.getElementById("onizleme");
+function cizTeklif(secilenler, sonFiyat, indirim) {
+  const icerik = document.getElementById("teklif-icerik");
 
   if (secilenler.length === 0) {
-    onizleme.innerHTML = '<p class="bos-uyari">Henüz analiz seçilmedi. Listeden analiz işaretleyip adet girin.</p>';
+    icerik.innerHTML = `
+      <div class="bos-uyari">
+        <p>Henüz analiz seçilmedi. Listeden analiz işaretleyip adet girin.</p>
+        <p>Metot / Numune Miktarı / Servis Süresi alanlarını tablo üzerinde düzenleyebilirsiniz.</p>
+      </div>`;
+    document.getElementById("kopyalama-alani").innerHTML = "";
     return;
   }
 
   const analizLi = secilenler.map(s => `<li>${s.ad}${s.adet > 1 ? " (x" + s.adet + ")" : ""}</li>`).join("");
 
-  // Toplam satırı etiketi: indirim varsa "Proje İndirimli Toplam Fiyat", yoksa "Kdv Hariç Toplam Proje Fiyatı"
+  // Önceki değerleri korumak için varsa mevcut input değerlerini al
+  const eskiMetot = document.getElementById("metot");
+  const eskiNumune = document.getElementById("numune");
+  const eskiServis = document.getElementById("servis");
+  const metotDeger = eskiMetot ? eskiMetot.value : "EU Toys";
+  const numuneDeger = eskiNumune ? eskiNumune.value : "";
+  const servisDeger = eskiServis ? eskiServis.value : "5 iş günü";
+
+  icerik.innerHTML = `
+    <div class="teklif-ozet">
+      <ul class="analiz-liste">${analizLi}</ul>
+      <div class="duz-alan">
+        <label for="metot">Metot</label>
+        <input type="text" id="metot" value="${metotDeger}" oninput="kopyaTablosunuGuncelle()">
+      </div>
+      <div class="duz-alan">
+        <label for="numune">Numune Miktarı</label>
+        <input type="text" id="numune" value="${numuneDeger}" oninput="kopyaTablosunuGuncelle()">
+      </div>
+      <div class="duz-alan">
+        <label for="servis">Servis Süresi</label>
+        <input type="text" id="servis" value="${servisDeger}" oninput="kopyaTablosunuGuncelle()">
+      </div>
+      <div class="teklif-fiyat">${indirim > 0 ? "İndirimli Proje Fiyatı" : "Toplam Proje Fiyatı"}: ${fiyatGoster(sonFiyat)} + Kdv</div>
+    </div>
+  `;
+
+  kopyaTablosunuGuncelle(analizLi, sonFiyat, indirim);
+}
+
+// Word'e kopyalanacak biçimli tabloyu (gizli alanda) günceller
+function kopyaTablosunuGuncelle(analizLi, sonFiyat, indirim) {
+  const kopyalama = document.getElementById("kopyalama-alani");
+
+  if (analizLi === undefined) {
+    // input değişiminden çağrıldıysa son hesaplanan değerleri yeniden üret
+    hesapla();
+    return;
+  }
+
+  const metot = document.getElementById("metot").value.trim();
+  const numune = document.getElementById("numune").value.trim();
+  const servis = document.getElementById("servis").value.trim();
   const toplamEtiket = indirim > 0 ? "Proje İndirimli Toplam Fiyat" : "Kdv Hariç Toplam Proje Fiyatı";
 
-  const tablo = `
+  kopyalama.innerHTML = `
     <table class="teklif" id="teklif-tablo">
       <thead>
         <tr>
@@ -294,19 +475,18 @@ function cizTeklif(secilenler, sonFiyat, indirim, kdv, metot, numune, servis) {
       <tbody>
         <tr>
           <td><ul class="analiz-liste">${analizLi}</ul></td>
-          <td class="fiyat">${trSayi(sonFiyat)} TL</td>
+          <td class="fiyat">${fiyatGoster(sonFiyat)}</td>
           <td>${metot}</td>
           <td>${numune}</td>
           <td style="text-align:center;">${servis}</td>
         </tr>
         <tr class="toplam">
           <th>${toplamEtiket}</th>
-          <td colspan="4">${trSayi(sonFiyat)} TL + Kdv</td>
+          <td colspan="4">${fiyatGoster(sonFiyat)} + Kdv</td>
         </tr>
       </tbody>
     </table>
   `;
-  onizleme.innerHTML = tablo;
 }
 
 function wordeKopyala() {
@@ -321,7 +501,6 @@ function wordeKopyala() {
 
   // Word'e biçimle yapışması için inline stilli kopya oluştur
   const klon = tablo.cloneNode(true);
-  // Inline stil enjekte et (Word panodan stil okur)
   klon.querySelectorAll("th").forEach(th => {
     const ust = th.closest("tr").classList.contains("toplam");
     th.setAttribute("style", "border:1px solid #BA7517;padding:8px 10px;background:#FFC000;color:#412402;font-weight:bold;text-align:" + (ust ? "left" : "center") + ";font-family:Arial,sans-serif;font-size:13px;");
@@ -381,10 +560,6 @@ function temizle() {
     document.getElementById("adet-" + i).value = 1;
   });
   document.getElementById("indirim").value = 0;
-  document.getElementById("kdv").value = 20;
-  document.getElementById("numune").value = "";
-  document.getElementById("servis").value = "5 iş günü";
-  document.getElementById("metot").value = "EU Toys";
   hesapla();
 }
 
