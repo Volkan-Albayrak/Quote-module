@@ -488,18 +488,10 @@ function kopyaTabloYap() {
   const metot = (document.getElementById("metot").value || "").trim();
   const numune = (document.getElementById("numune").value || "").trim();
   const servis = (document.getElementById("servis").value || "").trim();
-  const toplamEtiket = indirim > 0 ? "Proje İndirimli Toplam Fiyat" : "Kdv Hariç Toplam Proje Fiyatı";
+  const toplamEtiket = indirim > 0 ? "İndirimli Toplam Proje Fiyatı" : "Toplam Proje Fiyatı";
 
-  const satirlar = secilenler.map(s => {
-    return `
-        <tr>
-          <td>${s.ad}</td>
-          <td class="fiyat">${fiyatGoster(s.eur * s.adet)}</td>
-          <td>${metot}</td>
-          <td>${numune}</td>
-          <td style="text-align:center;">${servis}</td>
-        </tr>`;
-  }).join("");
+  // Tüm analizler tek hücrede alt alta (madde imsiz)
+  const analizAdlari = secilenler.map(s => `<div>${s.ad}</div>`).join("");
 
   kopyalama.innerHTML = `
     <table class="teklif" id="teklif-tablo">
@@ -513,9 +505,15 @@ function kopyaTabloYap() {
         </tr>
       </thead>
       <tbody>
-        ${satirlar}
+        <tr>
+          <td>${analizAdlari}</td>
+          <td class="fiyat">${fiyatGoster(sonFiyat)}</td>
+          <td>${metot}</td>
+          <td>${numune}</td>
+          <td style="text-align:center;">${servis}</td>
+        </tr>
         <tr class="toplam">
-          <td colspan="5" style="text-align:center;">${toplamEtiket}: ${fiyatGoster(sonFiyat)} + Kdv</td>
+          <td colspan="5" style="text-align:center;">${toplamEtiket} = ${fiyatGoster(sonFiyat)} + Kdv</td>
         </tr>
       </tbody>
     </table>
@@ -541,9 +539,9 @@ function wordeKopyala() {
   });
   klon.querySelectorAll("td").forEach(td => {
     const ust = td.closest("tr").classList.contains("toplam");
-    let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:top;" + yaziStil;
+    let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:middle;" + yaziStil;
     if (ust) stil += "background:#ffffff;color:#000000;text-align:center;";
-    else if (td.classList.contains("fiyat")) stil += "text-align:right;white-space:nowrap;";
+    else if (td.classList.contains("fiyat")) stil += "text-align:center;white-space:nowrap;";
     td.setAttribute("style", stil);
   });
   klon.setAttribute("style", "border-collapse:collapse;" + yaziStil);
