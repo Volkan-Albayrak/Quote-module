@@ -431,85 +431,91 @@ function hesapla() {
   cizTeklif(secilenler, indirimliToplam, indirim);
 }
 
+// Son hesaplanan teklif durumu (alan inputları değiştiğinde tabloyu yeniden üretmek için)
+let teklifDurum = { secilenler: [], sonFiyat: 0, indirim: 0 };
+
 function cizTeklif(secilenler, sonFiyat, indirim) {
   const icerik = document.getElementById("teklif-icerik");
+  teklifDurum = { secilenler: secilenler, sonFiyat: sonFiyat, indirim: indirim };
 
   if (secilenler.length === 0) {
     icerik.innerHTML = `
       <div class="bos-uyari">
         <p>Henüz analiz seçilmedi. Listeden analiz işaretleyip adet girin.</p>
-        <p>Metot / Numune Miktarı / Servis Süresi alanlarını tablo üzerinde düzenleyebilirsiniz.</p>
+        <p>Metot / Numune Miktarı / Servis Süresi alanlarını aşağıdan düzenleyebilirsiniz.</p>
       </div>`;
     document.getElementById("kopyalama-alani").innerHTML = "";
     return;
   }
 
-  const analizLi = secilenler.map(s => `<li>${s.ad}${s.adet > 1 ? " (x" + s.adet + ")" : ""}</li>`).join("");
-
-  // Önceki değerleri korumak için varsa mevcut input değerlerini al
-  const eskiMetot = document.getElementById("metot");
-  const eskiNumune = document.getElementById("numune");
-  const eskiServis = document.getElementById("servis");
-  const metotDeger = eskiMetot ? eskiMetot.value : "EU Toys";
-  const numuneDeger = eskiNumune ? eskiNumune.value : "";
-  const servisDeger = eskiServis ? eskiServis.value : "5 iş günü";
-
-  icerik.innerHTML = `
-    <div class="teklif-ozet">
-      <ul class="analiz-liste">${analizLi}</ul>
-      <div class="duz-alan">
-        <label for="metot">Metot</label>
-        <input type="text" id="metot" value="${metotDeger}" oninput="kopyaTablosunuGuncelle()">
+  // Alan inputları yalnızca seçim değiştiğinde yeniden oluşturulur (yazarken imleç kaymaz).
+  // Mevcut değerler korunur.
+  if (!document.getElementById("metot")) {
+    icerik.innerHTML = `
+      <div class="teklif-ozet">
+        <div class="duz-alan">
+          <label for="metot">Metot</label>
+          <input type="text" id="metot" value="EU Toys" oninput="kopyaTabloYap()">
+        </div>
+        <div class="duz-alan">
+          <label for="numune">Numune Miktarı</label>
+          <input type="text" id="numune" value="" oninput="kopyaTabloYap()">
+        </div>
+        <div class="duz-alan">
+          <label for="servis">Servis Süresi</label>
+          <input type="text" id="servis" value="5 iş günü" oninput="kopyaTabloYap()">
+        </div>
+        <div class="teklif-fiyat" id="teklif-fiyat-ozet"></div>
       </div>
-      <div class="duz-alan">
-        <label for="numune">Numune Miktarı</label>
-        <input type="text" id="numune" value="${numuneDeger}" oninput="kopyaTablosunuGuncelle()">
-      </div>
-      <div class="duz-alan">
-        <label for="servis">Servis Süresi</label>
-        <input type="text" id="servis" value="${servisDeger}" oninput="kopyaTablosunuGuncelle()">
-      </div>
-      <div class="teklif-fiyat">${indirim > 0 ? "İndirimli Proje Fiyatı" : "Toplam Proje Fiyatı"}: ${fiyatGoster(sonFiyat)} + Kdv</div>
-    </div>
-  `;
+    `;
+  }
 
-  kopyaTablosunuGuncelle(analizLi, sonFiyat, indirim);
+  document.getElementById("teklif-fiyat-ozet").textContent =
+    (indirim > 0 ? "İndirimli Proje Fiyatı" : "Toplam Proje Fiyatı") + ": " + fiyatGoster(sonFiyat) + " + Kdv";
+
+  kopyaTabloYap();
 }
 
-// Word'e kopyalanacak biçimli tabloyu (gizli alanda) günceller
-function kopyaTablosunuGuncelle(analizLi, sonFiyat, indirim) {
+// Word'e kopyalanacak biçimli tabloyu (gizli alanda) üretir — her analiz kendi satırında.
+function kopyaTabloYap() {
   const kopyalama = document.getElementById("kopyalama-alani");
+  const { secilenler, sonFiyat, indirim } = teklifDurum;
 
-  if (analizLi === undefined) {
-    // input değişiminden çağrıldıysa son hesaplanan değerleri yeniden üret
-    hesapla();
+  if (!secilenler || secilenler.length === 0) {
+    kopyalama.innerHTML = "";
     return;
   }
 
-  const metot = document.getElementById("metot").value.trim();
-  const numune = document.getElementById("numune").value.trim();
-  const servis = document.getElementById("servis").value.trim();
+  const metot = (document.getElementById("metot").value || "").trim();
+  const numune = (document.getElementById("numune").value || "").trim();
+  const servis = (document.getElementById("servis").value || "").trim();
   const toplamEtiket = indirim > 0 ? "Proje İndirimli Toplam Fiyat" : "Kdv Hariç Toplam Proje Fiyatı";
+
+  const satirlar = secilenler.map(s => {
+    const ad = s.ad + (s.adet > 1 ? " / " + s.adet + " numune" : "");
+    return `
+        <tr>
+          <td>${ad}</td>
+          <td class="fiyat">${fiyatGoster(s.eur * s.adet)}</td>
+          <td>${metot}</td>
+          <td>${numune}</td>
+          <td style="text-align:center;">${servis}</td>
+        </tr>`;
+  }).join("");
 
   kopyalama.innerHTML = `
     <table class="teklif" id="teklif-tablo">
       <thead>
         <tr>
           <th>Analiz Adı</th>
-          <th>Kdv Hariç Toplam Fiyat</th>
+          <th>Fiyat</th>
           <th>Metot</th>
           <th>Numune Miktarı</th>
           <th>Servis Süresi</th>
         </tr>
       </thead>
       <tbody>
-        <tr>
-          <td><ul class="analiz-liste">${analizLi}</ul></td>
-          <td class="fiyat">${fiyatGoster(sonFiyat)}</td>
-          <td>${metot}</td>
-          <td>${numune}</td>
-          <td style="text-align:center;">${servis}</td>
-        </tr>
+        ${satirlar}
         <tr class="toplam">
           <th>${toplamEtiket}</th>
           <td colspan="4">${fiyatGoster(sonFiyat)} + Kdv</td>
