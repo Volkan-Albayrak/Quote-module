@@ -330,44 +330,28 @@ function dovizSec(birim) {
   hesapla();
 }
 
-// TCMB'den Euro satış kurunu alır ve 0,5'in üstüne yuvarlar (örn. 53.7123 -> 54, 53.2512 -> 53.5)
-const TCMB_URL = "https://www.tcmb.gov.tr/kurlar/today.xml";
-
-// TCMB CORS başlığı göndermediği için sırayla doğrudan ve çeşitli proxy'ler denenir
-const TCMB_DENEMELERI = [
-  () => fetch(TCMB_URL).then(r => r.text()),
-  () => fetch("https://corsproxy.io/?url=" + encodeURIComponent(TCMB_URL)).then(r => r.text()),
-  () => fetch("https://api.allorigins.win/raw?url=" + encodeURIComponent(TCMB_URL)).then(r => r.text()),
-  () => fetch("https://api.allorigins.win/get?url=" + encodeURIComponent(TCMB_URL)).then(r => r.json()).then(j => j.contents),
-  () => fetch("https://api.codetabs.com/v1/proxy?quest=" + TCMB_URL).then(r => r.text())
-];
-
-function tcmbKuruIsle(metin) {
-  const xml = new DOMParser().parseFromString(metin, "text/xml");
-  const eur = xml.querySelector('Currency[CurrencyCode="EUR"] ForexSelling, Currency[CurrencyCode="EUR"] BanknoteSelling');
-  if (!eur || !eur.textContent.trim()) throw new Error("Kur bulunamadı");
-  const satis = parseFloat(eur.textContent.replace(",", "."));
+// Euro satış kurunu alır ve 0,5'in üstüne yuvarlar (örn. 53.7123 -> 54, 53.2512 -> 53.5)
+// Kur, GitHub Actions tarafından her gün TCMB'den çekilip yazılan kur.json'dan okunur (aynı kaynak, CORS yok).
+function kuruYuvarla(satis) {
   return Math.ceil(satis * 2) / 2; // 0,5'in üstüne yuvarla
-}
-
-// Denemeleri sırayla yapar, ilk başarılı olanın sonucunu döndürür
-function sirayleDene(denemeler, i) {
-  i = i || 0;
-  if (i >= denemeler.length) return Promise.reject(new Error("Tüm denemeler başarısız"));
-  return denemeler[i]()
-    .then(tcmbKuruIsle)
-    .catch(() => sirayleDene(denemeler, i + 1));
 }
 
 function tcmbKurGetir() {
   const uyari = document.getElementById("uyari");
 
-  sirayleDene(TCMB_DENEMELERI)
-    .then(yuvarlanmis => {
+  // Önbelleği atlamak için sürüm parametresi eklenir
+  fetch("kur.json?v=" + Date.now())
+    .then(r => {
+      if (!r.ok) throw new Error("kur.json okunamadı");
+      return r.json();
+    })
+    .then(veri => {
+      const yuvarlanmis = kuruYuvarla(parseFloat(veri.eurSatis));
       document.getElementById("kur").value = yuvarlanmis;
-      localStorage.setItem("tcmbKur", JSON.stringify({ deger: yuvarlanmis, tarih: new Date().toISOString() }));
+      localStorage.setItem("tcmbKur", JSON.stringify({ deger: yuvarlanmis, tarih: veri.guncelleme }));
       hesapla();
-      uyari.textContent = "TCMB kuru güncellendi: " + yuvarlanmis;
+      const tarih = veri.guncelleme ? new Date(veri.guncelleme).toLocaleDateString("tr-TR") : "";
+      uyari.textContent = "TCMB kuru: " + yuvarlanmis + (tarih ? " (" + tarih + ")" : "");
       uyari.style.color = "#2e7d32";
       setTimeout(() => { uyari.textContent = ""; }, 3000);
     })
@@ -377,13 +361,12 @@ function tcmbKurGetir() {
         const veri = JSON.parse(kayitli);
         document.getElementById("kur").value = veri.deger;
         hesapla();
-        const tarih = new Date(veri.tarih).toLocaleString("tr-TR");
-        uyari.textContent = "TCMB kuru otomatik alınamadı. Son bilinen kur (" + tarih + ") kullanılıyor, gerekirse manuel düzeltin.";
+        uyari.textContent = "Güncel kur alınamadı, son bilinen kur kullanılıyor. Gerekirse manuel düzeltin.";
       } else {
-        uyari.textContent = "TCMB kuru otomatik alınamadı, lütfen manuel girin.";
+        uyari.textContent = "Kur alınamadı, lütfen manuel girin.";
       }
       uyari.style.color = "#c62828";
-      setTimeout(() => { uyari.textContent = ""; }, 5000);
+      setTimeout(() => { uyari.textContent = ""; }, 6000);
     });
 }
 

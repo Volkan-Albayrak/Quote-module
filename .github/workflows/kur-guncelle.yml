@@ -1,0 +1,67 @@
+name: TCMB kuru güncelle
+
+on:
+  schedule:
+    # TCMB kuru iş günleri ~15:30 (TR) yayınlar. 13:00 ve 16:00 UTC'de çalıştır.
+    - cron: "0 13 * * 1-5"
+    - cron: "0 16 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repoyu al
+        uses: actions/checkout@v4
+
+      - name: TCMB Euro satış kurunu çek ve kur.json yaz
+        run: |
+          set -e
+          curl -sSf --retry 3 --retry-delay 5 \
+            -A "Mozilla/5.0" \
+            -o today.xml \
+            "https://www.tcmb.gov.tr/kurlar/today.xml"
+
+          python3 - <<'PY'
+          import xml.etree.ElementTree as ET
+          import json, datetime
+
+          tree = ET.parse("today.xml")
+          root = tree.getroot()
+          eur_satis = None
+          for c in root.findall("Currency"):
+              if c.get("CurrencyCode") == "EUR":
+                  val = (c.findtext("ForexSelling") or c.findtext("BanknoteSelling") or "").strip()
+                  if val:
+                      eur_satis = float(val.replace(",", "."))
+                  break
+
+          if eur_satis is None:
+              raise SystemExit("EUR satış kuru bulunamadı")
+
+          data = {
+              "eurSatis": eur_satis,
+              "guncelleme": datetime.datetime.now(datetime.timezone.utc).isoformat()
+          }
+          with open("kur.json", "w", encoding="utf-8") as f:
+              json.dump(data, f, ensure_ascii=False, indent=2)
+              f.write("\n")
+          print("Yazıldı:", data)
+          PY
+
+          rm -f today.xml
+
+      - name: Değişiklik varsa commit'le
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          if git diff --quiet kur.json; then
+            echo "Kur değişmedi, commit yok."
+          else
+            git add kur.json
+            git commit -m "TCMB kuru güncellendi"
+            git push
+          fi
