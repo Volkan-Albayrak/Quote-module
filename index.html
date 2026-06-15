@@ -20,6 +20,9 @@
     color: #222;
   }
 
+  html, body { height: 100%; }
+  body { display: flex; flex-direction: column; overflow: hidden; }
+
   /* Üst bar */
   .ust-bar {
     background: var(--koyu);
@@ -29,7 +32,8 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 12px;
-    padding: 14px 24px;
+    padding: 10px 20px;
+    flex-shrink: 0;
   }
   .ust-sol { display: flex; align-items: center; gap: 14px; }
   .logo { font-size: 20px; font-weight: 700; font-style: italic; letter-spacing: 0.5px; }
@@ -86,26 +90,32 @@
   /* Ana içerik */
   .ana-icerik {
     display: flex;
-    gap: 18px;
-    padding: 18px 24px;
-    align-items: flex-start;
+    gap: 14px;
+    padding: 12px 20px;
+    align-items: stretch;
+    flex: 1 1 auto;
+    min-height: 0;
   }
   .panel {
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
   }
   .panel-baslik {
     background: var(--koyu2);
     color: #fff;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     letter-spacing: 0.5px;
-    padding: 12px 18px;
+    padding: 8px 16px;
     text-transform: uppercase;
+    flex-shrink: 0;
   }
-  .panel-govde { padding: 16px 18px; }
+  .panel-govde { padding: 10px 16px; overflow: auto; flex: 1 1 auto; min-height: 0; }
 
   .panel-analiz { flex: 2 1 0; min-width: 0; }
   .panel-teklif { flex: 1 1 0; min-width: 280px; }
@@ -120,7 +130,7 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 7px 0;
+    padding: 4px 0;
     border-bottom: 1px solid #f0f0f0;
   }
   .analiz-satir input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
@@ -137,46 +147,47 @@
   }
 
   /* Teklif tablosu paneli */
-  .teklif-butonlar { display: flex; gap: 10px; margin-bottom: 14px; }
+  .teklif-butonlar { display: flex; gap: 10px; margin-bottom: 10px; }
   button.btn-ana {
     background: var(--sari); color: var(--sari-yazi); border: none;
-    padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer;
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;
   }
   button.btn-ana:hover { background: #e6ad00; }
   button.btn-ikincil {
     background: var(--koyu2); color: #fff; border: none;
-    padding: 10px 18px; border-radius: 6px; font-size: 14px; font-weight: 700; cursor: pointer;
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer;
   }
   button.btn-ikincil:hover { background: #444; }
-  .uyari { display: block; margin-top: 8px; font-size: 13px; color: #2e7d32; }
+  .uyari { display: block; margin-top: 6px; font-size: 12px; color: #2e7d32; }
 
   .bos-uyari { color: #999; font-size: 13px; }
-  .bos-uyari p { margin: 0 0 10px; }
+  .bos-uyari p { margin: 0 0 8px; }
 
   .teklif-ozet { font-size: 13px; }
-  .teklif-ozet .analiz-liste { margin: 0 0 14px; padding: 0 0 0 18px; }
-  .teklif-ozet .analiz-liste li { padding: 2px 0; }
-  .duz-alan { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+  .teklif-ozet .analiz-liste { margin: 0 0 10px; padding: 0 0 0 18px; }
+  .teklif-ozet .analiz-liste li { padding: 1px 0; }
+  .duz-alan { display: flex; flex-direction: column; gap: 3px; margin-bottom: 8px; }
   .duz-alan label { font-size: 12px; color: #555; font-weight: 600; }
   .duz-alan input {
-    padding: 7px 9px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;
+    padding: 6px 9px; border: 1px solid #ccc; border-radius: 5px; font-size: 13px;
   }
   .teklif-fiyat {
     background: var(--sari); color: var(--sari-yazi); font-weight: 700;
-    border-radius: 6px; padding: 10px 12px; text-align: right; font-size: 14px; margin-top: 10px;
+    border-radius: 6px; padding: 9px 12px; text-align: right; font-size: 14px; margin-top: 8px;
   }
 
   /* Fiyatlandırma */
-  .panel-fiyat { margin: 0 24px 24px; }
+  .panel-fiyat { margin: 0 20px 12px; flex-shrink: 0; }
+  .panel-fiyat .panel-govde { overflow: visible; }
   .fiyat-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
+    gap: 16px;
   }
-  .fiyat-alan { display: flex; flex-direction: column; gap: 6px; }
+  .fiyat-alan { display: flex; flex-direction: column; gap: 4px; }
   .fiyat-alan label { font-size: 12px; color: #555; font-weight: 600; }
   .fiyat-alan input {
-    padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 16px;
+    padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 15px;
   }
   .fiyat-alan input[readonly] { background: #f9f9f9; color: #333; font-weight: 600; }
   #indirimliFiyat { border: 1px solid var(--sari-kenar); background: #fff8e6; }
@@ -206,6 +217,8 @@
   #kopyalama-alani { position: absolute; left: -9999px; top: -9999px; }
 
   @media (max-width: 900px) {
+    /* Dar ekranda tek sayfa zorlamasını bırak, normal kaydırmaya izin ver */
+    body { overflow: auto; }
     .ana-icerik { flex-direction: column; }
     .analiz-grid { grid-template-columns: 1fr; }
     .fiyat-grid { grid-template-columns: 1fr; }
