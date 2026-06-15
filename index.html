@@ -530,21 +530,22 @@ function wordeKopyala() {
     return;
   }
 
-  // Word'e biçimle yapışması için inline stilli kopya oluştur (Calibri, 9pt, bold)
-  const yaziStil = "font-family:Calibri,sans-serif;font-size:9pt;font-weight:bold;";
+  // Word'e biçimle yapışması için inline stilli kopya oluştur
+  // Başlık: Tahoma, gövde: Calibri — 9pt, bold
+  const baslikYazi = "font-family:Tahoma,sans-serif;font-size:9pt;font-weight:bold;";
+  const govdeYazi = "font-family:Calibri,sans-serif;font-size:9pt;font-weight:bold;";
   const klon = tablo.cloneNode(true);
   klon.querySelectorAll("th").forEach(th => {
-    const ust = th.closest("tr").classList.contains("toplam");
-    th.setAttribute("style", "border:1px solid #BA7517;padding:8px 10px;background:#FFC000;color:#412402;text-align:" + (ust ? "left" : "center") + ";" + yaziStil);
+    th.setAttribute("style", "border:1px solid #BA7517;padding:8px 10px;background:#FFC000;color:#412402;text-align:center;" + baslikYazi);
   });
   klon.querySelectorAll("td").forEach(td => {
     const ust = td.closest("tr").classList.contains("toplam");
-    let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:middle;" + yaziStil;
+    let stil = "border:1px solid #BA7517;padding:8px 10px;vertical-align:middle;" + govdeYazi;
     if (ust) stil += "background:#ffffff;color:#000000;text-align:center;";
     else if (td.classList.contains("fiyat")) stil += "text-align:center;white-space:nowrap;";
     td.setAttribute("style", stil);
   });
-  klon.setAttribute("style", "border-collapse:collapse;" + yaziStil);
+  klon.setAttribute("style", "border-collapse:collapse;" + govdeYazi);
 
   const html = klon.outerHTML;
   const blob = new Blob([html], { type: "text/html" });
