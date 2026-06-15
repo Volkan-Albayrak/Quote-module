@@ -330,17 +330,26 @@ function dovizSec(birim) {
   hesapla();
 }
 
-// TCMB'den (banknot satış, 0,5 yukarı yuvarlanmış) Euro kurunu almaya çalışır
+// TCMB'den Euro satış kurunu alır ve 0,5'in üstüne yuvarlar (örn. 53.7123 -> 54, 53.2512 -> 53.5)
+const TCMB_URL = "https://www.tcmb.gov.tr/kurlar/today.xml";
+const TCMB_PROXY_URL = "https://corsproxy.io/?url=" + encodeURIComponent(TCMB_URL);
+
+function tcmbKuruIsle(metin) {
+  const xml = new DOMParser().parseFromString(metin, "text/xml");
+  const eur = xml.querySelector('Currency[CurrencyCode="EUR"] ForexSelling, Currency[CurrencyCode="EUR"] BanknoteSelling');
+  if (!eur || !eur.textContent.trim()) throw new Error("Kur bulunamadı");
+  const satis = parseFloat(eur.textContent.replace(",", "."));
+  return Math.ceil(satis * 2) / 2; // 0,5'in üstüne yuvarla
+}
+
 function tcmbKurGetir() {
   const uyari = document.getElementById("uyari");
-  fetch("https://www.tcmb.gov.tr/kurlar/today.xml")
+
+  fetch(TCMB_URL)
     .then(r => r.text())
-    .then(metin => {
-      const xml = new DOMParser().parseFromString(metin, "text/xml");
-      const eur = xml.querySelector('Currency[CurrencyCode="EUR"] BanknoteSelling');
-      if (!eur) throw new Error("Kur bulunamadı");
-      const satis = parseFloat(eur.textContent.replace(",", "."));
-      const yuvarlanmis = Math.ceil(satis * 2) / 2; // 0,5'in üstüne yuvarla
+    .then(tcmbKuruIsle)
+    .catch(() => fetch(TCMB_PROXY_URL).then(r => r.text()).then(tcmbKuruIsle))
+    .then(yuvarlanmis => {
       document.getElementById("kur").value = yuvarlanmis;
       hesapla();
       uyari.textContent = "TCMB kuru güncellendi: " + yuvarlanmis;
@@ -566,6 +575,7 @@ function temizle() {
 // Başlat
 listeyiOlustur();
 hesapla();
+tcmbKurGetir();
 </script>
 </body>
 </html>
